@@ -53,6 +53,10 @@ class TypeFragment : Fragment() {
             itemView.apply {
                 catItem.text = category.name
             }
+
+            itemView.setOnClickListener {
+
+            }
         }
     }
 
