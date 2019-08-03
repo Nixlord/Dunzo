@@ -11,7 +11,7 @@ import com.phoenixoverlord.pravega.extensions.logDebug
 import me.xdrop.fuzzywuzzy.FuzzySearch
 import java.io.File
 
-const val THRESHOLD = 0.7
+const val THRESHOLD = 70
 
 object TextScanner {
 
@@ -29,7 +29,7 @@ object TextScanner {
         firebaseText.textBlocks.forEach {
             it.lines.forEach {
                 it.elements.forEach {
-                    elements.add(it.text)
+                    elements.add(it.text.toLowerCase())
                 }
             }
         }

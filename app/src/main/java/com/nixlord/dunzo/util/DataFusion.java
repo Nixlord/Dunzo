@@ -8,6 +8,7 @@ import kotlin.Pair;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class DataFusion {
@@ -64,15 +65,19 @@ public class DataFusion {
         int highestIndex = getHighestIndex(secondMap);
         ArrayList<String> extractedElements = extract(lowestIndex, highestIndex, elements);
         ArrayList<String> nameElementList = new ArrayList<>();
-        separateElementList(extractedElements, nameElementList);//thus extractedElements now become numberElementList
-        cleanStringElementList(firstMarkers, nameElementList);
-        cleanStringElementList(secondMarkers, nameElementList);
+        ArrayList<String> numberElementList = new ArrayList<>();
+        cleanStringElementList(firstMarkers, extractedElements);
+        cleanStringElementList(secondMarkers, extractedElements);
+        separateElementList(extractedElements, nameElementList, numberElementList);
 
 
+
+        print("Total Element List: ");
+        printList(extractedElements);
         print("Name Element List: ");
         printList(nameElementList);
         print("Number Element List: ");
-        printList(extractedElements);
+        printList(numberElementList);
 
     }
     public static int getLowestIndex(HashMap<String, Integer> map){
@@ -94,26 +99,29 @@ public class DataFusion {
         return highest;
     }
     public static ArrayList<String> extract(int startIndex, int endIndex, ArrayList<String> elementList){
-        ArrayList<String> updatedElementList = (ArrayList<String>) elementList.subList(startIndex, endIndex+1);
+        ArrayList<String> updatedElementList = new ArrayList<String>();
+        for(int i=startIndex;i<=endIndex;i++){
+            updatedElementList.add(elementList.get(i));
+        }
         return updatedElementList;
     }
-    //Strings get extracted from numberElementList (the original list), and we are left with the list containing numbers. Hence the name 'numberElementList'
-    public static void separateElementList(ArrayList<String> numberElementList, ArrayList<String> nameElementList){
-        int index = 0;
-        for(String s:numberElementList){
+    public static void separateElementList(ArrayList<String> elementList, ArrayList<String> nameElementList, ArrayList<String> numberElementList){
+        for(String s:elementList){
             try{
                 Float.parseFloat(s);
+                numberElementList.add(s);
             }
             catch (Exception e){
-                nameElementList.add(numberElementList.remove(index));
+                nameElementList.add(s);
             }
-            index++;
         }
     }
     public static void cleanStringElementList(ArrayList<String> toClear, ArrayList<String> from){
         for(String s:toClear){
             ExtractedResult extractedResult = FuzzySearch.extractOne(s, from);
-            from.remove(extractedResult.getIndex());
+            print(s+" "+extractedResult.toString());
+            if(extractedResult.getScore()>75)
+                from.remove(extractedResult.getIndex());
         }
     }
     public static void print(String msg){
