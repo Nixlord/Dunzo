@@ -1,10 +1,14 @@
 package com.nixlord.dunzo.util;
 
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
+import com.nixlord.dunzo.ml.TextScanner;
+import com.nixlord.dunzo.ml.TextScannerKt;
 import com.phoenixoverlord.pravega.extensions.LoggerKt;
+import kotlin.Pair;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 
+import java.lang.reflect.Array;
 import java.util.*;
 
 public class DataFusion {
@@ -33,6 +37,8 @@ public class DataFusion {
         String resultText = visionText.getText();
         //print(resultText);
 
+
+
         for(FirebaseVisionText.TextBlock block: visionText.getTextBlocks()){
             String blockText = block.getText();
             print(blockText);
@@ -46,6 +52,32 @@ public class DataFusion {
         }
         print("Name: "+name+"\n Address: "+address+"\nPhone No.: "+phoneNo);
         //LoggerKt.logDebug("DataFusion", "");
+
+
+        ArrayList<String> firstMarkers = TextScanner.INSTANCE.getFirstMarkers();
+        ArrayList<String> secondMarkers = TextScanner.INSTANCE.getSecondMarkers();
+        Pair<HashMap<String, Integer>, HashMap<String, Integer>> parts = TextScanner.INSTANCE.parts(visionText);
+        HashMap<String, Integer> firstMap = parts.getFirst();
+        HashMap<String, Integer> secondMap = parts.getSecond();
+        ArrayList<String> elements = TextScanner.INSTANCE.getElements(visionText);
+
+        int lowestIndex = getLowestIndex(firstMap);
+        int highestIndex = getHighestIndex(secondMap);
+        ArrayList<String> extractedElements = extract(lowestIndex, highestIndex, elements);
+        ArrayList<String> nameElementList = new ArrayList<>();
+        ArrayList<String> numberElementList = new ArrayList<>();
+        cleanStringElementList(firstMarkers, extractedElements);
+        cleanStringElementList(secondMarkers, extractedElements);
+        separateElementList(extractedElements, nameElementList, numberElementList);
+
+
+
+        print("Total Element List: ");
+        printList(extractedElements);
+        print("Name Element List: ");
+        printList(nameElementList);
+        print("Number Element List: ");
+        printList(numberElementList);
 
     }
     public static int getLowestIndex(HashMap<String, Integer> map){
@@ -67,28 +99,35 @@ public class DataFusion {
         return highest;
     }
     public static ArrayList<String> extract(int startIndex, int endIndex, ArrayList<String> elementList){
-        ArrayList<String> updatedElementList = (ArrayList<String>) elementList.subList(startIndex, endIndex+1);
+        ArrayList<String> updatedElementList = new ArrayList<String>();
+        for(int i=startIndex;i<=endIndex;i++){
+            updatedElementList.add(elementList.get(i));
+        }
         return updatedElementList;
     }
-    public static void separateElementList(ArrayList<String> numberElementList, ArrayList<String> nameElementList){
-        int index = 0;
-        for(String s:numberElementList){
+    public static void separateElementList(ArrayList<String> elementList, ArrayList<String> nameElementList, ArrayList<String> numberElementList){
+        for(String s:elementList){
             try{
                 Float.parseFloat(s);
+                numberElementList.add(s);
             }
             catch (Exception e){
-                nameElementList.add(numberElementList.remove(index));
+                nameElementList.add(s);
             }
-            index++;
         }
     }
     public static void cleanStringElementList(ArrayList<String> toClear, ArrayList<String> from){
         for(String s:toClear){
             ExtractedResult extractedResult = FuzzySearch.extractOne(s, from);
-            from.remove(extractedResult.getIndex());
+            print(s+" "+extractedResult.toString());
+            if(extractedResult.getScore()>75)
+                from.remove(extractedResult.getIndex());
         }
     }
     public static void print(String msg){
         LoggerKt.logDebug("DataFusion", msg);
+    }
+    public static void printList(ArrayList<String> list){
+        LoggerKt.logDebug("DataFusion",list.toString());
     }
 }

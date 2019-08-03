@@ -11,7 +11,7 @@ import com.phoenixoverlord.pravega.extensions.logDebug
 import me.xdrop.fuzzywuzzy.FuzzySearch
 import java.io.File
 
-const val THRESHOLD = 0.7
+const val THRESHOLD = 70
 
 object TextScanner {
 
@@ -29,14 +29,14 @@ object TextScanner {
         firebaseText.textBlocks.forEach {
             it.lines.forEach {
                 it.elements.forEach {
-                    elements.add(it.text)
+                    elements.add(it.text.toLowerCase())
                 }
             }
         }
         return elements
     }
 
-    fun parts(firebaseText : FirebaseVisionText) {
+    fun parts(firebaseText : FirebaseVisionText)  : Pair<HashMap<String, Int>, HashMap<String, Int>> {
         val elements = getElements(firebaseText)
 
         val mapFirstMarkers = hashMapOf<String, Int>()
@@ -50,7 +50,8 @@ object TextScanner {
             target : String,
             currentWord: String,
             currentIndex: Int
-        ) {
+        )
+        {
             val match = FuzzySearch.ratio(target, currentWord)
             if (match > THRESHOLD) {
                 map[target]?.let { index ->
@@ -77,15 +78,16 @@ object TextScanner {
                 assignClosestMatch(mapSecondMarkers, target, word, index)
             }
         }
-
-        fun closest() = elements.reduce { largest, current ->
-            if ( FuzzySearch.ratio(current, "item") > FuzzySearch.ratio(largest, "item"))
-                current
-            else
-                largest
-        }
-
-        logDebug("Logging from", "Closest word to item is ${closest()}")
+//
+//        fun closest() = elements.reduce { largest, current ->
+//            if ( FuzzySearch.ratio(current, "item") > FuzzySearch.ratio(largest, "item"))
+//                current
+//            else
+//                largest
+//        }
+//
+//        logDebug("Logging from", "Closest word to item is ${closest()}")
+        return Pair(mapFirstMarkers, mapSecondMarkers)
     }
 
 
