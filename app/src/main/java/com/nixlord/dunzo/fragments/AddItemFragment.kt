@@ -16,11 +16,10 @@ import com.nixlord.dunzo.R
 import com.nixlord.dunzo.azure.ComputerVision
 import com.nixlord.dunzo.azure.SpellCheck
 import com.nixlord.dunzo.ml.TextScanner
-import com.nixlord.dunzo.util.JSONParser
+import com.nixlord.dunzo.util.DataCreator
 import com.phoenixoverlord.pravega.base.BaseActivity
 import com.phoenixoverlord.pravega.extensions.logDebug
 import com.phoenixoverlord.pravega.extensions.logError
-import io.grpc.internal.JsonParser
 import kotlinx.android.synthetic.main.fragment_new_product.*
 import java.io.File
 
@@ -44,8 +43,12 @@ class AddItemFragment : Fragment() {
                             it.forEach { image ->
                                 imageFile = image
                                 ComputerVision.recognize(image, {
-                                    logDebug(it)
-                                    JSONParser.parser(it);
+                                    val recognitionResult = DataCreator.deserializeText(it)
+                                    val sentenceList = DataCreator.createObject(recognitionResult)
+                                    sentenceList.forEach {
+                                        logDebug(it)
+                                    }
+
                                 }, {
                                     logError(it)
                                 })
