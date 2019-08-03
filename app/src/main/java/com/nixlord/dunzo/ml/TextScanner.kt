@@ -90,25 +90,13 @@ object TextScanner {
 
 
 
-    fun scan(activity: BaseActivity) {
-        activity.apply {
-            withPermissions(
-                Manifest.permission.CAMERA
-            ).execute {
-                takePhoto("Select Bill")
-                    .addOnSuccessListener {
-                        it.forEach { image ->
-                            val firebaseImage = FirebaseVisionImage.fromFilePath(activity, Uri.fromFile(image))
-                            detector.processImage(firebaseImage)
-                                .addOnSuccessListener {
-                                    //logDebug(it.text)
-                                    DataFusion.createProduct(it)
-                                    parts(it)
-                                }
-
-                        }
-                    }
+    fun scan(activity: BaseActivity, image : File) {
+        val firebaseImage = FirebaseVisionImage.fromFilePath(activity, Uri.fromFile(image))
+        detector.processImage(firebaseImage)
+            .addOnSuccessListener {
+                //logDebug(it.text)
+                DataFusion.createProduct(it)
+                parts(it)
             }
-        }
     }
 }

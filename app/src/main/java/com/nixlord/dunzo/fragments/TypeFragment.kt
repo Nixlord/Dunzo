@@ -14,6 +14,7 @@ import com.nixlord.dunzo.R
 import com.nixlord.dunzo.model.Type
 import com.nixlord.dunzo.model.Seller
 import com.phoenixoverlord.pravega.extensions.Firebase
+import com.phoenixoverlord.pravega.extensions.logDebug
 import kotlinx.android.synthetic.main.type_item.*
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
 
@@ -25,7 +26,7 @@ class TypeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setupFirestoreRecyclerView(Firebase.firestore.collection("type"))
+        setupFirestoreRecyclerView(Firebase.firestore.collection("categories"))
     }
 
     private fun setupFirestoreRecyclerView (query: Query) {
@@ -55,7 +56,7 @@ class TypeFragment : Fragment() {
             }
 
             itemView.setOnClickListener {
-
+                logDebug("Clicked")
             }
         }
     }
