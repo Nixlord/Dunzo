@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">Dunzo</string>
+    <string-array name="types">
+        <item>Food</item>
+        <item>Groceries</item>
+        <item>Electronics</item>
+    </string-array>
 </resources>

@@ -6,10 +6,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.google.android.material.tabs.TabLayout
 import com.nixlord.dunzo.fragments.AddItemFragment
-import com.nixlord.dunzo.fragments.CategoryFragment
+import com.nixlord.dunzo.fragments.TypeFragment
 import com.nixlord.dunzo.fragments.SellerFragment
 import com.phoenixoverlord.pravega.base.BaseActivity
-import com.phoenixoverlord.pravega.extensions.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
@@ -18,7 +17,7 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        tabLayout.addTab(tabLayout.newTab().setText("Category"))
+        tabLayout.addTab(tabLayout.newTab().setText("Type"))
         tabLayout.addTab(tabLayout.newTab().setText("Store"))
         tabLayout.addTab(tabLayout.newTab().setText("Add Item"))
         tabLayout.tabGravity = TabLayout.GRAVITY_FILL
@@ -45,7 +44,7 @@ class MainActivity : BaseActivity() {
 
         override fun getItem(position: Int): Fragment? {
             when (position) {
-                0 -> return CategoryFragment()
+                0 -> return TypeFragment()
                 1 -> return SellerFragment()
                 2 -> return AddItemFragment()
                 else -> return null
@@ -59,7 +58,7 @@ class MainActivity : BaseActivity() {
 
         override fun getPageTitle(position: Int): CharSequence {
             return when (position) {
-                0 -> "Category"
+                0 -> "Type"
                 1 -> "Store"
                 else -> {
                     return "Add Item"
