@@ -13,13 +13,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.phoenixoverlord.pravega.extensions.logDebug
+import kotlinx.android.synthetic.main.activity_final.view.*
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
 import kotlinx.android.synthetic.main.product_item.*
 
 class ProductActivity : AppCompatActivity() {
 
     private var PARAMETER_ONE = "Parameter1"
-    private var CALLING_FRAGMMENT = "CallingFragment"
+    private var CALLING_FRAGMENT = "CallingFragment"
     lateinit var query : Query
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -27,7 +29,10 @@ class ProductActivity : AppCompatActivity() {
         setContentView(R.layout.fragment_recyclerview)
 
         val paramOne = intent.getStringExtra(PARAMETER_ONE)
-        val paramTwo = intent.getStringExtra(CALLING_FRAGMMENT)
+        val paramTwo = intent.getStringExtra(CALLING_FRAGMENT)
+
+        logDebug(paramOne)
+        logDebug(paramTwo)
 
         when(paramTwo){
             "TypeFragment" ->
@@ -38,7 +43,7 @@ class ProductActivity : AppCompatActivity() {
             "SellerFragment" ->
                     query = Firebase.firestore
                         .collection("product")
-                        .whereArrayContains("stores", paramOne)
+                        .whereArrayContains("stores", paramOne!!)
         }
 
         setupFirestoreRecyclerView(query)
@@ -66,10 +71,10 @@ class ProductActivity : AppCompatActivity() {
 
     inner class ProductHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         fun bindItems(product: Product) {
-            productName.text = product.name
-            productCost.text = product.price
-
+            itemView.productName.text = product.name
+            itemView.productCost.text = product.price
             itemView.setOnClickListener {
+                logDebug(product.id)
                 val intent = Intent(baseContext, FinalActivity::class.java)
                 intent.putExtra("ProductKey", product.id)
                 startActivity(intent)
