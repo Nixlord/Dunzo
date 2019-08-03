@@ -43,13 +43,17 @@ public class DataFusion {
 
         for(FirebaseVisionText.TextBlock block: visionText.getTextBlocks()){
             String blockText = block.getText();
-            print(blockText);
+            //print(blockText);
             if(headerCount-->0) {
 
                 List<FirebaseVisionText.Line> lineList = block.getLines();
                 name = lineList.get(0).getText();
                 address = lineList.get(1).getText() + " " + lineList.get(2).getText() + " " + lineList.get(3).getText();
                 phoneNo = lineList.get(4).getText().replaceAll("Ph No. ", "");
+            }
+            for(FirebaseVisionText.Line line:block.getLines()){
+                String lineText = line.getText();
+                print("Line: "+lineText);
             }
         }
         print("Name: "+name+"\n Address: "+address+"\nPhone No.: "+phoneNo);
@@ -71,6 +75,8 @@ public class DataFusion {
         cleanStringElementList(firstMarkers, extractedElements);
         cleanStringElementList(secondMarkers, extractedElements);
         separateElementList(extractedElements, nameElementList, numberElementList);
+
+        print("Before Outliers: "+nameElementList);
         removeOutliers(nameElementList);
 
 
@@ -137,13 +143,24 @@ public class DataFusion {
 //                elementList.remove(i);
 //            }
 //        }
-        String pattern = "\\w+";
-        Pattern p = Pattern.compile(pattern);
+//        String pattern = "^[a-z]*$";
+//        Pattern p = Pattern.compile(pattern);
+        print("Total elements: "+elementList.size());
         for(int i=0;i<elementList.size();i++){
-            Matcher m = p.matcher(elementList.get(i));
-            if(!m.find()){
+            String s = elementList.get(i);
+            print("Checking... "+s);
+            char[] ch = s.toCharArray();
+            int flag = 0;
+            for(char c:ch){
+                if(Character.isLetter(c)==false){
+                    flag = 1;
+                    break;
+                }
+            }
+            if(flag==1){
                 print("Outlier: "+elementList.get(i));
                 elementList.remove(i);
+                i--;
             }
         }
     }
