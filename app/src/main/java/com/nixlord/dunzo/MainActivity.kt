@@ -10,9 +10,10 @@ class MainActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-        fab.setOnClickListener {
+
+        /*fab.setOnClickListener {
 
             TextScanner.scan(this)
-        }
+        }*/
     }
 }
