@@ -2,8 +2,10 @@ package com.nixlord.dunzo
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.gms.tasks.Tasks
 import com.nixlord.dunzo.model.Product
 import com.phoenixoverlord.pravega.extensions.Firebase
+import com.phoenixoverlord.pravega.extensions.Firebase.firestore
 import kotlinx.android.synthetic.main.activity_final.*
 
 class FinalActivity : AppCompatActivity() {
@@ -26,6 +28,7 @@ class FinalActivity : AppCompatActivity() {
                 productName.text = product.name
                 productCost.text = product.price
 
+                val storesPromises = product.stores.map{ firestore.document("stores/$it").get() }
 
             }
     }

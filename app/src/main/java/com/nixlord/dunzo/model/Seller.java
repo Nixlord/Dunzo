@@ -3,30 +3,30 @@ package com.nixlord.dunzo.model;
 import java.util.HashMap;
 
 public class Seller {
-    String ID;
+    String id;
     String name;
     String address;
     String phoneNo;
-    HashMap<String, Integer> productIDCountMap;
+    HashMap<String, String> productIDCountMap;
 
     public Seller() {
 
     }
 
-    public Seller(String ID, String name, String address, String phoneNo, HashMap<String, Integer> productIDCountMap) {
-        this.ID = ID;
+    public Seller(String id, String name, String address, String phoneNo, HashMap<String, String> productIDCountMap) {
+        this.id = id;
         this.name = name;
         this.address = address;
         this.phoneNo = phoneNo;
         this.productIDCountMap = productIDCountMap;
     }
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
@@ -53,11 +53,11 @@ public class Seller {
         this.phoneNo = phoneNo;
     }
 
-    public HashMap<String, Integer> getProductIDCountMap() {
+    public HashMap<String, String> getProductIDCountMap() {
         return productIDCountMap;
     }
 
-    public void setProductIDCountMap(HashMap<String, Integer> productIDCountMap) {
+    public void setProductIDCountMap(HashMap<String, String> productIDCountMap) {
         this.productIDCountMap = productIDCountMap;
     }
 }
