@@ -27,9 +27,9 @@ public class DataFusion {
         String address = "";
         String phoneNo = "";
         String resultText = visionText.getText();
-        //print(resultText);
+        print(resultText);
 
-        for(FirebaseVisionText.TextBlock block: visionText.getTextBlocks()){
+        /*for(FirebaseVisionText.TextBlock block: visionText.getTextBlocks()){
             if(headerCount-->0) {
                 String blockText = block.getText();
                 List<FirebaseVisionText.Line> lineList = block.getLines();
@@ -38,7 +38,7 @@ public class DataFusion {
                 phoneNo = lineList.get(4).getText().replaceAll("Ph No. ", "");
             }
         }
-        print("Name: "+name+"\n Address: "+address+"\nPhone No.: "+phoneNo);
+        print("Name: "+name+"\n Address: "+address+"\nPhone No.: "+phoneNo);*/
         //LoggerKt.logDebug("DataFusion", "");
 
     }

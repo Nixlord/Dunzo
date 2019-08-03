@@ -6,7 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.nixlord.dunzo.R
+import com.nixlord.dunzo.ml.TextScanner
+import com.phoenixoverlord.pravega.base.BaseActivity
 import com.phoenixoverlord.pravega.extensions.Firebase
+import kotlinx.android.synthetic.main.fragment_new_product.*
 
 class AddItemFragment : Fragment() {
 
@@ -16,6 +19,12 @@ class AddItemFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        cameraButton.setOnClickListener {
+            TextScanner.scan(this.activity as BaseActivity)
+        }
     }
+
+
 
 }
