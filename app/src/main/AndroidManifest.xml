@@ -28,6 +28,7 @@
 
         <activity android:name=".ProductActivity"/>
         <activity android:name=".FinalActivity"/>
+        <activity android:name=".util.DataCreator"/>
     </application>
 
 </manifest>
