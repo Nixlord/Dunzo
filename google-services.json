@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "177405585963",
+    "firebase_url": "https://dunzo-hackathon.firebaseio.com",
+    "project_id": "dunzo-hackathon",
+    "storage_bucket": "dunzo-hackathon.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:177405585963:android:6c6ffe17dcedb33d",
+        "android_client_info": {
+          "package_name": "com.nixlord.dunzo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "177405585963-i6h7bhfmfnd6phpdhor5aaht3kotrt9b.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.nixlord.dunzo",
+            "certificate_hash": "baf1d48ed2ece006ef54b2288755da8ac948c1dd"
+          }
+        },
+        {
+          "client_id": "177405585963-mfu05ji2a5a4dagh1emferenvblhbpjl.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCybp92CY-GYqvqRDsHFVoiBpzURAdPqys"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "177405585963-mfu05ji2a5a4dagh1emferenvblhbpjl.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
