@@ -17,6 +17,8 @@ import com.phoenixoverlord.pravega.extensions.Firebase
 import com.phoenixoverlord.pravega.extensions.logDebug
 import kotlinx.android.synthetic.main.type_item.*
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
+import kotlinx.android.synthetic.main.type_item.catItem
+import kotlinx.android.synthetic.main.type_item.view.*
 
 class TypeFragment : Fragment() {
 
@@ -51,9 +53,10 @@ class TypeFragment : Fragment() {
 
     inner class TypeHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         fun bindItems(category : Type) {
-            itemView.apply {
-                catItem.text = category.name
-            }
+            itemView.catItem.text = category.name
+//            itemView.apply {
+//                catItem.text = category.name
+//            }
 
             itemView.setOnClickListener {
                 logDebug("Clicked")
