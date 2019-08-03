@@ -2,7 +2,7 @@ package com.nixlord.dunzo.util;
 
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.phoenixoverlord.pravega.extensions.LoggerKt;
-
+import java.util.*;
 public class DataFusion {
     public static void createProduct(FirebaseVisionText visionText) {
 //        food/bill10
@@ -20,20 +20,25 @@ public class DataFusion {
 
         Replace print calls with Object creation and return the object.
 
-
-
          */
+
+        int headerCount = 1;
+        String name = "";
+        String address = "";
+        String phoneNo = "";
         String resultText = visionText.getText();
-        print(resultText);
+        //print(resultText);
+
         for(FirebaseVisionText.TextBlock block: visionText.getTextBlocks()){
-            String blockText = block.getText();
-            for(FirebaseVisionText.Line line: block.getLines()){
-                String lineText = line.getText();
-                for(FirebaseVisionText.Element element: line.getElements()){
-                    String elementText = element.getText();
-                }
+            if(headerCount-->0) {
+                String blockText = block.getText();
+                List<FirebaseVisionText.Line> lineList = block.getLines();
+                name = lineList.get(0).getText();
+                address = lineList.get(1).getText() + " " + lineList.get(2).getText() + " " + lineList.get(3).getText();
+                phoneNo = lineList.get(4).getText().replaceAll("Ph No. ", "");
             }
         }
+        print("Name: "+name+"\n Address: "+address+"\nPhone No.: "+phoneNo);
         //LoggerKt.logDebug("DataFusion", "");
 
     }

@@ -9,6 +9,7 @@ import com.nixlord.dunzo.fragments.AddItemFragment
 import com.nixlord.dunzo.fragments.CategoryFragment
 import com.nixlord.dunzo.fragments.SellerFragment
 import com.phoenixoverlord.pravega.base.BaseActivity
+import com.phoenixoverlord.pravega.extensions.Firebase
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : BaseActivity() {
