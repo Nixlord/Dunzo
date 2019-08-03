@@ -3,7 +3,7 @@ package com.nixlord.dunzo.model;
 import java.util.ArrayList;
 
 public class Product {
-    String ID;
+    String id;
     String name;
     String type;
     String price;
@@ -13,20 +13,20 @@ public class Product {
 
     }
 
-    public Product(String ID, String name, String type, String price, ArrayList<String> stores) {
-        this.ID = ID;
+    public Product(String id, String name, String type, String price, ArrayList<String> stores) {
+        this.id = id;
         this.name = name;
         this.type = type;
         this.price = price;
         this.stores = stores;
     }
 
-    public String getID() {
-        return ID;
+    public String getId() {
+        return id;
     }
 
-    public void setID(String ID) {
-        this.ID = ID;
+    public void setId(String id) {
+        this.id = id;
     }
 
     public String getName() {
