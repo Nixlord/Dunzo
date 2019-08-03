@@ -10,6 +10,8 @@ import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 
 import java.lang.reflect.Array;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class DataFusion {
     public static void createProduct(FirebaseVisionText visionText) {
@@ -69,7 +71,7 @@ public class DataFusion {
         cleanStringElementList(firstMarkers, extractedElements);
         cleanStringElementList(secondMarkers, extractedElements);
         separateElementList(extractedElements, nameElementList, numberElementList);
-
+        removeOutliers(nameElementList);
 
 
         print("Total Element List: ");
@@ -122,6 +124,27 @@ public class DataFusion {
             print(s+" "+extractedResult.toString());
             if(extractedResult.getScore()>75)
                 from.remove(extractedResult.getIndex());
+        }
+    }
+    public static void removeOutliers(ArrayList<String> elementList){
+//        String pattern = "(\\d*)(,)(\\d*)";
+//        Pattern p = Pattern.compile(pattern);
+//        for(int i=0;i<elementList.size();i++){
+//            Matcher m = p.matcher(elementList.get(i));
+//            if(((Matcher) m).find()){
+//                //remove from list
+//                print("Outlier: "+elementList.get(i));
+//                elementList.remove(i);
+//            }
+//        }
+        String pattern = "\\w+";
+        Pattern p = Pattern.compile(pattern);
+        for(int i=0;i<elementList.size();i++){
+            Matcher m = p.matcher(elementList.get(i));
+            if(!m.find()){
+                print("Outlier: "+elementList.get(i));
+                elementList.remove(i);
+            }
         }
     }
     public static void print(String msg){
