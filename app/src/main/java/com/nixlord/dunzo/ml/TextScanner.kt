@@ -1,6 +1,7 @@
 package com.nixlord.dunzo.ml
 
 import android.Manifest
+import android.graphics.BitmapFactory
 import android.net.Uri
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
@@ -93,7 +94,8 @@ object TextScanner {
 
 
     fun scan(activity: BaseActivity, image : File) {
-        val firebaseImage = FirebaseVisionImage.fromFilePath(activity, Uri.fromFile(image))
+        val bitmap = BitmapFactory.decodeFile(image.path)
+        val firebaseImage = FirebaseVisionImage.fromBitmap(bitmap)
         detector.processImage(firebaseImage)
             .addOnSuccessListener {
                 //logDebug(it.text)
