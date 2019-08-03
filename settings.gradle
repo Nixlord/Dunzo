@@ -1,1 +1,1 @@
-include ':app'
+include ':app', ':tess4j-3.4.8'

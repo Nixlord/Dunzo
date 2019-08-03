@@ -1,0 +1,2 @@
+configurations.maybeCreate("default")
+artifacts.add("default", file('tess4j-3.4.8.jar'))

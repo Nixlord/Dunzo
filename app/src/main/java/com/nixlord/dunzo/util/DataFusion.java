@@ -27,18 +27,29 @@ public class DataFusion {
         String address = "";
         String phoneNo = "";
         String resultText = visionText.getText();
-        print(resultText);
 
-        /*for(FirebaseVisionText.TextBlock block: visionText.getTextBlocks()){
-            if(headerCount-->0) {
-                String blockText = block.getText();
-                List<FirebaseVisionText.Line> lineList = block.getLines();
-                name = lineList.get(0).getText();
-                address = lineList.get(1).getText() + " " + lineList.get(2).getText() + " " + lineList.get(3).getText();
-                phoneNo = lineList.get(4).getText().replaceAll("Ph No. ", "");
-            }
+        print(resultText);
+        print("\n");
+        for (FirebaseVisionText.TextBlock textBlock : visionText.getTextBlocks()) {
+            for (FirebaseVisionText.Line line : textBlock.getLines())
+                print(line.getText() + "\n");
         }
-        print("Name: "+name+"\n Address: "+address+"\nPhone No.: "+phoneNo);*/
+
+        for(FirebaseVisionText.TextBlock block: visionText.getTextBlocks()) {
+            String text = block.getText();
+
+        }
+
+//            For one bill
+//            if (headerCount-- > 0) {
+//                String blockText = block.getText();
+//                List<FirebaseVisionText.Line> lineList = block.getLines();
+//                name = lineList.get(0).getText();
+//                address = lineList.get(1).getText() + " " + lineList.get(2).getText() + " " + lineList.get(3).getText();
+//                phoneNo = lineList.get(4).getText().replaceAll("Ph No. ", "");
+//            }
+//        }
+//        print("Name: "+name+"\n Address: "+address+"\nPhone No.: "+phoneNo);
         //LoggerKt.logDebug("DataFusion", "");
 
     }
