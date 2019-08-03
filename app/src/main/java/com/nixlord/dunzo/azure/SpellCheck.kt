@@ -12,50 +12,55 @@ import com.google.gson.Gson
 import com.google.gson.JsonElement
 import com.google.gson.JsonParser
 import com.phoenixoverlord.pravega.extensions.logDebug
+import com.phoenixoverlord.pravega.extensions.logError
+import okhttp3.*
 import java.io.BufferedReader
+import java.io.IOException
 import java.io.InputStreamReader
 
 
 object SpellCheck {
+
     var host = "https://api.cognitive.microsoft.com"
     var path = "/bing/v7.0/spellcheck"
-
     var key = "ddfdcc52727e4ebe8afd67ac89b53f65"
-
     var mkt = "en-US"
     var mode = "proof"
     var text = "Hollo, wrld!"
 
 
+    val http = OkHttpClient()
+
     @Throws(Exception::class)
-    fun check() {
-        val params = "?mkt=$mkt&mode=$mode"
-        // add the rest of the code snippets here (except prettify() and main())...
-        val url = URL(host + path + params)
-        val connection = url.openConnection() as HttpsURLConnection
+    fun predict(text: String)  {
 
-        connection.setRequestMethod("POST");
-        connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-        connection.setRequestProperty("Ocp-Apim-Subscription-Key", key);
-        connection.setDoOutput(true);
+        val formBody = FormBody.Builder()
+            .add("mkt", mkt)
+            .add("mode", mode)
+            .add("text", text)
+            .build()
 
-        val wr = DataOutputStream(connection.outputStream)
-        wr.writeBytes("text=$text")
-        wr.flush()
-        wr.close()
+        val request = Request.Builder()
+            .url(host + path)
+            .addHeader("Content-Type", "application/x-www-form-urlencoded")
+            .addHeader("Ocp-Apim-Subscription-Key", key)
+            .post(formBody)
+            .build()
 
-        val inp = BufferedReader(
-            InputStreamReader(connection.getInputStream())
-        );
-        var line : String = ""
+        try {
+            http.newCall(request).enqueue(object : Callback {
+                override fun onFailure(call: Call, e: IOException) {
+                    logError(e)
+                }
 
-        while (true) {
-            line = inp.readLine()
-            if (line == null)
-                break
-            logDebug("SpellCheck", line)
+                override fun onResponse(call: Call, response: Response) {
+                    response.body?.string().let { logDebug("SpellCheck", it) }
+                }
+            })
+        } catch (err: Exception) {
+            logError(err)
         }
-        inp.close();
+
     }
 
     // This function prettifies the json response.
