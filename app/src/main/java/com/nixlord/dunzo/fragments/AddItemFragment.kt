@@ -13,9 +13,12 @@ import android.widget.Spinner
 import androidx.fragment.app.Fragment
 import com.nixlord.dunzo.MainActivity
 import com.nixlord.dunzo.R
+import com.nixlord.dunzo.azure.ComputerVision
+import com.nixlord.dunzo.azure.SpellCheck
 import com.nixlord.dunzo.ml.TextScanner
 import com.phoenixoverlord.pravega.base.BaseActivity
 import com.phoenixoverlord.pravega.extensions.logDebug
+import com.phoenixoverlord.pravega.extensions.logError
 import kotlinx.android.synthetic.main.fragment_new_product.*
 import java.io.File
 
@@ -38,11 +41,20 @@ class AddItemFragment : Fragment() {
                         .addOnSuccessListener {
                             it.forEach { image ->
                                 imageFile = image
+                                ComputerVision.recognize(image, {
+                                    logDebug(it)
+                                }, {
+                                    logError(it)
+                                })
                                 productImage.setImageBitmap(BitmapFactory.decodeFile("$image"))
                             }
                         }
                 }
             }
+        }
+
+        azureSpellCheck.setOnClickListener {
+            SpellCheck.predict("kachor")
         }
 
         setupSpinner(productType, R.array.types) { selected -> logDebug(selected) }
