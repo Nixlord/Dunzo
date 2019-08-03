@@ -9,6 +9,10 @@ public class Product {
     String price;
     ArrayList<String> stores;
 
+    public Product() {
+
+    }
+
     public Product(String ID, String name, String type, String price, ArrayList<String> stores) {
         this.ID = ID;
         this.name = name;
