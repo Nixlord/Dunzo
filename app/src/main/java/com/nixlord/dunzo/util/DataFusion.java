@@ -1,7 +1,10 @@
 package com.nixlord.dunzo.util;
 
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
+import com.nixlord.dunzo.ml.TextScanner;
+import com.nixlord.dunzo.ml.TextScannerKt;
 import com.phoenixoverlord.pravega.extensions.LoggerKt;
+import kotlin.Pair;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
 import me.xdrop.fuzzywuzzy.model.ExtractedResult;
 
@@ -33,6 +36,8 @@ public class DataFusion {
         String resultText = visionText.getText();
         //print(resultText);
 
+
+
         for(FirebaseVisionText.TextBlock block: visionText.getTextBlocks()){
             String blockText = block.getText();
             print(blockText);
@@ -46,6 +51,28 @@ public class DataFusion {
         }
         print("Name: "+name+"\n Address: "+address+"\nPhone No.: "+phoneNo);
         //LoggerKt.logDebug("DataFusion", "");
+
+
+        ArrayList<String> firstMarkers = TextScanner.INSTANCE.getFirstMarkers();
+        ArrayList<String> secondMarkers = TextScanner.INSTANCE.getSecondMarkers();
+        Pair<HashMap<String, Integer>, HashMap<String, Integer>> parts = TextScanner.INSTANCE.parts(visionText);
+        HashMap<String, Integer> firstMap = parts.getFirst();
+        HashMap<String, Integer> secondMap = parts.getSecond();
+        ArrayList<String> elements = TextScanner.INSTANCE.getElements(visionText);
+
+        int lowestIndex = getLowestIndex(firstMap);
+        int highestIndex = getHighestIndex(secondMap);
+        ArrayList<String> extractedElements = extract(lowestIndex, highestIndex, elements);
+        ArrayList<String> nameElementList = new ArrayList<>();
+        separateElementList(extractedElements, nameElementList);//thus extractedElements now become numberElementList
+        cleanStringElementList(firstMarkers, nameElementList);
+        cleanStringElementList(secondMarkers, nameElementList);
+
+
+        print("Name Element List: ");
+        printList(nameElementList);
+        print("Number Element List: ");
+        printList(extractedElements);
 
     }
     public static int getLowestIndex(HashMap<String, Integer> map){
@@ -70,6 +97,7 @@ public class DataFusion {
         ArrayList<String> updatedElementList = (ArrayList<String>) elementList.subList(startIndex, endIndex+1);
         return updatedElementList;
     }
+    //Strings get extracted from numberElementList (the original list), and we are left with the list containing numbers. Hence the name 'numberElementList'
     public static void separateElementList(ArrayList<String> numberElementList, ArrayList<String> nameElementList){
         int index = 0;
         for(String s:numberElementList){
@@ -90,5 +118,8 @@ public class DataFusion {
     }
     public static void print(String msg){
         LoggerKt.logDebug("DataFusion", msg);
+    }
+    public static void printList(ArrayList<String> list){
+        LoggerKt.logDebug("DataFusion",list.toString());
     }
 }
