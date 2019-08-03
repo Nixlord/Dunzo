@@ -16,6 +16,7 @@ import com.nixlord.dunzo.R
 import com.nixlord.dunzo.azure.ComputerVision
 import com.nixlord.dunzo.azure.SpellCheck
 import com.nixlord.dunzo.ml.TextScanner
+import com.nixlord.dunzo.util.DataCreator
 import com.phoenixoverlord.pravega.base.BaseActivity
 import com.phoenixoverlord.pravega.extensions.logDebug
 import com.phoenixoverlord.pravega.extensions.logError
@@ -42,7 +43,12 @@ class AddItemFragment : Fragment() {
                             it.forEach { image ->
                                 imageFile = image
                                 ComputerVision.recognize(image, {
-                                    logDebug(it)
+                                    val recognitionResult = DataCreator.deserializeText(it)
+                                    val sentenceList = DataCreator.createObject(recognitionResult)
+                                    sentenceList.forEach {
+                                        logDebug(it)
+                                    }
+
                                 }, {
                                     logError(it)
                                 })
