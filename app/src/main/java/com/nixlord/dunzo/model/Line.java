@@ -7,11 +7,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class Line {
 
-
+    @SerializedName("boundingBox")
+    @Expose
     private List<Integer> boundingBox = null;
-
+    @SerializedName("text")
+    @Expose
     private String text;
-
+    @SerializedName("words")
+    @Expose
     private List<Word> words = null;
 
     public List<Integer> getBoundingBox() {

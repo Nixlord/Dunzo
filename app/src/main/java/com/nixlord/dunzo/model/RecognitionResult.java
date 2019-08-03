@@ -4,21 +4,26 @@ package com.nixlord.dunzo.model;
 import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import com.nixlord.dunzo.model.Line;
 
 public class RecognitionResult {
 
-
+    @SerializedName("page")
+    @Expose
     private Integer page;
-
+    @SerializedName("clockwiseOrientation")
+    @Expose
     private Double clockwiseOrientation;
-
+    @SerializedName("width")
+    @Expose
     private Integer width;
-
+    @SerializedName("height")
+    @Expose
     private Integer height;
-
+    @SerializedName("unit")
+    @Expose
     private String unit;
-
+    @SerializedName("lines")
+    @Expose
     private List<Line> lines = null;
 
     public Integer getPage() {

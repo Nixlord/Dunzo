@@ -1,3 +1,4 @@
+
 package com.nixlord.dunzo.model;
 
 import java.util.List;
@@ -6,11 +7,14 @@ import com.google.gson.annotations.SerializedName;
 
 public class Word {
 
-
+    @SerializedName("boundingBox")
+    @Expose
     private List<Integer> boundingBox = null;
-
+    @SerializedName("text")
+    @Expose
     private String text;
-
+    @SerializedName("confidence")
+    @Expose
     private String confidence;
 
     public List<Integer> getBoundingBox() {

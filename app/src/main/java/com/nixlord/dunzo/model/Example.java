@@ -7,9 +7,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class Example {
 
-
+    @SerializedName("status")
+    @Expose
     private String status;
-
+    @SerializedName("recognitionResults")
+    @Expose
     private List<RecognitionResult> recognitionResults = null;
 
     public String getStatus() {
