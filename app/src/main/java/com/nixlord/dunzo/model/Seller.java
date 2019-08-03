@@ -9,6 +9,10 @@ public class Seller {
     String phoneNo;
     HashMap<String, Integer> productIDCountMap;
 
+    public Seller() {
+
+    }
+
     public Seller(String ID, String name, String address, String phoneNo, HashMap<String, Integer> productIDCountMap) {
         this.ID = ID;
         this.name = name;

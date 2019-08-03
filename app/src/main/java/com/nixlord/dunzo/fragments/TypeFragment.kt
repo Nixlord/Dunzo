@@ -1,5 +1,6 @@
 package com.nixlord.dunzo.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.Query
+import com.nixlord.dunzo.ProductActivity
 import com.nixlord.dunzo.R
 import com.nixlord.dunzo.model.Type
 import com.nixlord.dunzo.model.Seller
@@ -54,12 +56,14 @@ class TypeFragment : Fragment() {
     inner class TypeHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         fun bindItems(category : Type) {
             itemView.catItem.text = category.name
-//            itemView.apply {
-//                catItem.text = category.name
-//            }
 
             itemView.setOnClickListener {
-                logDebug("Clicked")
+                (activity).let{
+                    val intent = Intent (it, ProductActivity::class.java)
+                    intent.putExtra("Parameter1", category.name)
+                    intent.putExtra("CallingFragment", "TypeFragment")
+                    it!!.startActivity(intent)
+                }
             }
         }
     }

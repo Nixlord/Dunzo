@@ -1,5 +1,6 @@
 package com.nixlord.dunzo.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.phoenixoverlord.pravega.extensions.Firebase
 import com.google.firebase.firestore.Query
+import com.nixlord.dunzo.ProductActivity
 import com.nixlord.dunzo.R
 import com.nixlord.dunzo.model.Seller
 import kotlinx.android.synthetic.main.fragment_recyclerview.*
@@ -49,10 +51,17 @@ class SellerFragment : Fragment() {
 
     inner class SellerHolder(itemView : View) : RecyclerView.ViewHolder(itemView) {
         fun bindItems(seller : Seller) {
-            itemView.apply {
-                storeName.text = seller.name
-                storeAddress.text = seller.address
-                storePhoneNumber.text = seller.phoneNo
+            itemView.storeName.text = seller.name
+            itemView.storeAddress.text = seller.address
+            itemView.storePhoneNumber.text = seller.phoneNo
+
+            itemView.setOnClickListener{
+                (activity).let{
+                    val intent = Intent (it, ProductActivity::class.java)
+                    intent.putExtra("Parameter1", seller.id)
+                    intent.putExtra("CallingFragment", "SellerFragment")
+                    it!!.startActivity(intent)
+                }
             }
         }
     }
