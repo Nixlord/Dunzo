@@ -8,6 +8,8 @@ public class Type {
         this.name = name;
     }
 
+    public Type() {}
+
     public String getName() {
         return name;
     }
