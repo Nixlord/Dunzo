@@ -69,17 +69,18 @@ public class DataFusion {
         HashMap<String, Integer> firstMap = parts.getFirst();
         HashMap<String, Integer> secondMap = parts.getSecond();
 
-        int lowestIndex = getLowestIndex(firstMap);
-        int highestIndex = getHighestIndex(secondMap);
-        ArrayList<String> extractedElements = extract(lowestIndex, highestIndex, elements);
+        int lowestIndex = getHighestIndex(firstMap);
+        int highestIndex = getLowestIndex(secondMap);
         ArrayList<String> nameElementList = new ArrayList<>();
         ArrayList<String> numberElementList = new ArrayList<>();
-        cleanStringElementList(firstMarkers, extractedElements);
-        cleanStringElementList(secondMarkers, extractedElements);
-        separateElementList(extractedElements, nameElementList, numberElementList);
+        ArrayList<String> extractedElements = extract(lowestIndex, highestIndex, nameElementList, numberElementList);
 
-        print("Before Outliers: "+nameElementList);
-        removeOutliers(nameElementList);
+//        cleanStringElementList(firstMarkers, extractedElements);
+//        cleanStringElementList(secondMarkers, extractedElements);
+        //separateElementList(extractedElements, nameElementList, numberElementList);
+
+        //print("Before Outliers: "+nameElementList);
+        //removeOutliers(nameElementList);
 
 
         print("Total Element List: ");
@@ -108,10 +109,23 @@ public class DataFusion {
         }
         return highest;
     }
-    public static ArrayList<String> extract(int startIndex, int endIndex, ArrayList<String> elementList){
+    public static ArrayList<String> extract(int startIndex, int endIndex, ArrayList<String> nameElementList, ArrayList<String> numberElementList){
         ArrayList<String> updatedElementList = new ArrayList<String>();
         for(int i=startIndex;i<=endIndex;i++){
-            updatedElementList.add(elementList.get(i));
+            //updatedElementList.add(elementList.get(i));
+            String s = nameElementList.get(i);
+            String[] strArray = s.split(" ");
+            String itemName = "";
+            for(String str:strArray){
+                try{
+                    Float.parseFloat(str);
+                    numberElementList.add(str);
+                }
+                catch (Exception e){
+                    itemName += (str+" ");
+                }
+            }
+            nameElementList.add(itemName);
         }
         return updatedElementList;
     }
@@ -126,14 +140,14 @@ public class DataFusion {
             }
         }
     }
-    public static void cleanStringElementList(ArrayList<String> toClear, ArrayList<String> from){
-        for(String s:toClear){
-            ExtractedResult extractedResult = FuzzySearch.extractOne(s, from);
-            print(s+" "+extractedResult.toString());
-            if(extractedResult.getScore()>75)
-                from.remove(extractedResult.getIndex());
-        }
-    }
+//    public static void cleanStringElementList(ArrayList<String> toClear, ArrayList<String> from){
+//        for(String s:toClear){
+//            ExtractedResult extractedResult = FuzzySearch.extractOne(s, from);
+//            print(s+" "+extractedResult.toString());
+//            if(extractedResult.getScore()>75)
+//                from.remove(extractedResult.getIndex());
+//        }
+//    }
     public static void removeOutliers(ArrayList<String> elementList){
 //        String pattern = "(\\d*)(,)(\\d*)";
 //        Pattern p = Pattern.compile(pattern);
@@ -166,6 +180,7 @@ public class DataFusion {
             }
         }
     }
+
     public static void print(String msg){
         LoggerKt.logDebug("DataFusion", msg);
     }

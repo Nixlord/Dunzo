@@ -3,10 +3,11 @@ package com.nixlord.dunzo.util;
 import com.google.gson.*;
 import com.nixlord.dunzo.model.RecognitionResult;
 import com.phoenixoverlord.pravega.extensions.LoggerKt;
+import org.json.JSONArray;
 
 public class JSONParser {
 
-    public static RecognitionResult parser(String jsonString) {
+    public static RecognitionResult parser(String jsonString)throws Exception {
 //        GsonBuilder builder = new GsonBuilder();
 //        builder.setPrettyPrinting();
 //
@@ -22,6 +23,7 @@ public class JSONParser {
 //        JsonElement element = details.getAsJsonArray("recognitionResults").getAsJsonArray();
 
         Gson g = new Gson();
+
         RecognitionResult result = g.fromJson(jsonString, RecognitionResult.class);
         LoggerKt.logDebug("JSONParser", result.toString());
         return result;
