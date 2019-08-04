@@ -130,7 +130,7 @@ class AddItemFragment : Fragment() {
 
             //logDebug("UPLOAD   " + product.name)
             //"Qty Price Amount""ALU PYAZ KACHO""4.000""28.44 113.76""KHAMAN DHOKLA""3.000""23.70 71.10""JALEBI""0.300 331.75""99.53""LACCHA RABDI""2.000""37.91""75.82"
-
+            DataFusion.extract(product.name);
 
 
             var productRef = Firebase.firestore.collection("product").document()

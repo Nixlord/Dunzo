@@ -3,6 +3,7 @@ package com.nixlord.dunzo.util;
 import com.google.firebase.ml.vision.text.FirebaseVisionText;
 import com.nixlord.dunzo.ml.TextScanner;
 import com.nixlord.dunzo.ml.TextScannerKt;
+import com.nixlord.dunzo.model.Product;
 import com.phoenixoverlord.pravega.extensions.LoggerKt;
 import kotlin.Pair;
 import me.xdrop.fuzzywuzzy.FuzzySearch;
@@ -73,7 +74,7 @@ public class DataFusion {
         int highestIndex = getLowestIndex(secondMap);
         ArrayList<String> nameElementList = new ArrayList<>();
         ArrayList<String> numberElementList = new ArrayList<>();
-        ArrayList<String> extractedElements = extract(lowestIndex, highestIndex, nameElementList, numberElementList);
+        //ArrayList<String> extractedElements = extract(lowestIndex, highestIndex, nameElementList, numberElementList);
 
 //        cleanStringElementList(firstMarkers, extractedElements);
 //        cleanStringElementList(secondMarkers, extractedElements);
@@ -83,8 +84,8 @@ public class DataFusion {
         //removeOutliers(nameElementList);
 
 
-        print("Total Element List: ");
-        printList(extractedElements);
+        //print("Total Element List: ");
+        //printList(extractedElements);
         print("Name Element List: ");
         printList(nameElementList);
         print("Number Element List: ");
@@ -109,25 +110,83 @@ public class DataFusion {
         }
         return highest;
     }
-    public static ArrayList<String> extract(int startIndex, int endIndex, ArrayList<String> nameElementList, ArrayList<String> numberElementList){
-        ArrayList<String> updatedElementList = new ArrayList<String>();
-        for(int i=startIndex;i<=endIndex;i++){
-            //updatedElementList.add(elementList.get(i));
-            String s = nameElementList.get(i);
-            String[] strArray = s.split(" ");
+    public static ArrayList<Product> extract(String data){
+        //print("///////////////////////////////////////////////////////////////////////////////");
+        //print("++++++++++++++++++++"+data);
+        //ArrayList<String> updatedElementList = new ArrayList<String>();
+        ArrayList<Product> listOfProducts = new ArrayList<>();
+        data = data.replaceAll("\"\""," ");
+        data = data.replaceAll("\"", "");
+        data = cleanAfterDot(data);
+        print("++++++++++++++++++++"+data);
+        String[] strArray = data.split(" ");
+        int startIndex = 3;
+        for(int i=startIndex;i<strArray.length;i+=0){
             String itemName = "";
-            for(String str:strArray){
-                try{
-                    Float.parseFloat(str);
-                    numberElementList.add(str);
-                }
-                catch (Exception e){
-                    itemName += (str+" ");
-                }
+            String temp1 = strArray[i];
+            while(!Character.isDigit(temp1.charAt(0))){
+                print("Temp: "+temp1+" "+i);
+                itemName += (temp1+" ");
+                i++;
+                temp1 = strArray[i];
             }
-            nameElementList.add(itemName);
+            print("Temp: "+temp1+" "+i);
+            float qty = 0.0f;
+            float price = 0.0f;
+            float amount = 0.0f;
+            while(Character.isDigit(temp1.charAt(0))){
+                print("Assigning "+temp1+" to qty");
+                qty = Float.parseFloat(temp1);
+                i++;
+                temp1 = strArray[i];
+                print("Assigning "+temp1+" to price");
+                price = Float.parseFloat(temp1);
+                i++;
+                temp1 = strArray[i];
+                print("Assigning "+temp1+" to amount");
+                amount = Float.parseFloat(temp1);
+                i++;
+                if(i==strArray.length){
+                    break;
+                }
+                temp1 = strArray[i];
+                //print("Temp: "+temp1+" "+i);
+            }
+
+            print("Product Details: "+itemName+" "+qty+" "+price+" "+amount);
+            Product product = new Product();
+            product.setName(itemName);
+            product.setPrice(price+"");
+            listOfProducts.add(product);
         }
-        return updatedElementList;
+        //return updatedElementList;
+        return listOfProducts;
+    }
+//    public static void extract(String data){
+//        data = data.replaceAll("\"","\"");
+//        String[] strArray = data.split()
+//    }
+    public static String cleanAfterDot(String data){
+        print("____________"+data);
+        char[] ch = data.toCharArray();
+        String newData = ch[0]+"";
+        for(int i=1;i<ch.length;i++){
+            if((int)ch[i]==32 && (int)ch[i-1]==46){
+                //print("----------------"+ch[i]+ch[i-1]);
+                continue;
+            }
+            if((int)ch[i]==46 && (int)ch[i-1]==32){
+                newData = newData.trim();
+                newData += ".";
+                continue;
+            }
+            if((int)ch[i]==44){
+                newData += ".";
+                continue;
+            }
+            newData += ch[i];
+        }
+        return newData;
     }
     public static void separateElementList(ArrayList<String> elementList, ArrayList<String> nameElementList, ArrayList<String> numberElementList){
         for(String s:elementList){
