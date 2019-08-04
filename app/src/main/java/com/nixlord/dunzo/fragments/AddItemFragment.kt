@@ -37,10 +37,26 @@ class AddItemFragment : Fragment() {
         return inflater.inflate(R.layout.fragment_new_product, container, false)
     }
 
+//    fun segment(sentence: String) {
+//        var lines = sentence
+//            .split("\"")
+//            .flatMap {
+//                it.split(" ")
+//            }
+//            .filter { ! (it.contains("qty", true) || it.contains("price", true) || it.contains("amount", true)) }
+//            .forEach { logDebug(it) }
+//
+//
+//
+//
+//    }
+
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        val product = Product()
+//        segment(""" "Qty Price Amount""ALU PYAZ KACHO""4.000""28.44 113.76""KHAMAN DHOKLA""3.000""23.70 71.10""JALEBI""0.300 331.75""99.53""LACCHA RABDI""2.000""37.91""75.82 """)
+            val product = Product()
         val seller = Seller()
         var type = "Food"
 
@@ -125,71 +141,78 @@ class AddItemFragment : Fragment() {
         setupSpinner(productType, R.array.types) { selected -> type = selected }
 
         uploadButton.setOnClickListener {
+
             logDebug("")
             product.type = type
 
             //logDebug("UPLOAD   " + product.name)
             //"Qty Price Amount""ALU PYAZ KACHO""4.000""28.44 113.76""KHAMAN DHOKLA""3.000""23.70 71.10""JALEBI""0.300 331.75""99.53""LACCHA RABDI""2.000""37.91""75.82"
-            DataFusion.extract(product.name);
+            val productList = DataFusion.extract(product.name)
 
-
-            var productRef = Firebase.firestore.collection("product").document()
-            Firebase.firestore.collection("seller")
-                .whereEqualTo("name", seller.name)
-                .get()
-                .addOnSuccessListener {
-                    var sellerID = ""
-                    var sellerRef: DocumentReference
-                    if (it.isEmpty) {
-                        sellerRef = Firebase.firestore.collection("seller").document()
-                        sellerRef.set(seller)
-                        sellerID = sellerRef.id
-                    } else {
-                        sellerID = it.documents.first().get("id").toString()
-                    }
-
-                    product.id = productRef.id
-                    product.stores.add(sellerID)
-                    productRef.set(product)
-
-                    logDebug("pr:id", product.id)
-                    logDebug("pr:name", product.name)
-                    logDebug("pr:price", product.price)
-                    logDebug("pr:type", product.type)
-                    logDebug("sel:id", seller.id)
-                    logDebug("sel:name", seller.name)
-                    logDebug("sel:phn", seller.phoneNo)
-                    logDebug("sel:add", seller.address)
+            productList
+                .map { Pair(it, Firebase.firestore.collection("product").document()) }
+                .map { (product, ref) ->
+                    product.type = type
+                    product.id = ref.id
+                    Pair(product, ref)
                 }
-                .addOnFailureListener {
-                    val sellerRef = Firebase.firestore.collection("seller").document()
-                    sellerRef.set(seller)
-                    val sellerID = sellerRef.id
+                .forEach { (product, productRef) ->
 
-                    product.id = productRef.id
-                    product.stores.add(sellerID)
-                    productRef.set(product)
+                    Firebase.firestore.collection("seller")
+                        .whereEqualTo("name", seller.name)
+                        .get()
+                        .addOnSuccessListener {
+                            var sellerID = "NOT_FOUND"
+                            it.documents.forEach { snapshot ->
+//                                logDebug("SNAPSHOT:ID", snapshot.id)
+                                sellerID = snapshot.id
+                            }
 
-                    logError(Error("FAILURE"))
-                    logDebug("pr:id", product.id)
-                    logDebug("pr:name", product.name)
-                    logDebug("pr:price", product.price)
-                    logDebug("pr:type", product.type)
-                    logDebug("sel:id", seller.id)
-                    logDebug("sel:name", seller.name)
-                    logDebug("sel:phn", seller.phoneNo)
-                    logDebug("sel:add", seller.address)
+                            logDebug("SNAPSHOT:ID", sellerID)
+                            if (sellerID == "NOT_FOUND") {
+                                logDebug("Creating Seller")
+                                val sellerRef = Firebase.firestore.collection("seller").document()
+                                sellerID = sellerRef.id
+                                seller.id = sellerID
+                                sellerRef.set(seller)
+                            }
 
+                            seller.id = sellerID
+
+                            product.stores.add(sellerID)
+                            productRef.set(product)
+
+                            logDebug("pr:id", product.id)
+                            logDebug("pr:name", product.name)
+                            logDebug("pr:price", product.price)
+                            logDebug("pr:type", product.type)
+                            logDebug("sel:id", seller.id)
+                            logDebug("sel:name", seller.name)
+                            logDebug("sel:phn", seller.phoneNo)
+                            logDebug("sel:add", seller.address)
+                        }
+                        .addOnFailureListener {
+                            val sellerRef = Firebase.firestore.collection("seller").document()
+                            sellerRef.set(seller)
+                            val sellerID = sellerRef.id
+
+                            product.id = productRef.id
+                            product.stores.add(sellerID)
+                            productRef.set(product)
+
+                            logError(Error("FAILURE"))
+                            logDebug("pr:id", product.id)
+                            logDebug("pr:name", product.name)
+                            logDebug("pr:price", product.price)
+                            logDebug("pr:type", product.type)
+                            logDebug("sel:id", seller.id)
+                            logDebug("sel:name", seller.name)
+                            logDebug("sel:phn", seller.phoneNo)
+                            logDebug("sel:add", seller.address)
+
+                        }
                 }
         }
-    }
-
-    fun splitter(text : String) {
-
-        val markerFound = arrayListOf<String>("item", "qty", "price", "amount")
-        val list = ArrayList<String>()
-        //
-
     }
 
     fun setupSpinner(spinner : Spinner, textArrayResID : Int, onItemSelected : (String) -> Unit) {
