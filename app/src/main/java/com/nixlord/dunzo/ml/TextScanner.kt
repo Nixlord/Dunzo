@@ -39,6 +39,23 @@ object TextScanner {
 
     fun parts(lines: ArrayList<String>)  : Pair<HashMap<String, Int>, HashMap<String, Int>> {
 
+        val words = arrayListOf<String>()
+        val wordIndex = hashMapOf<String, Int>()
+
+        lines.mapIndexed { index, line ->
+            val split = line.trim().split(" ")
+            if (split.size > 1)
+                split.forEach { word ->
+                    wordIndex[word] = index
+                    words.add(word)
+                }
+            else {
+                wordIndex[line] = index
+                words.add(line)
+            }
+            1
+        }
+
         val mapFirstMarkers = hashMapOf<String, Int>()
         val mapSecondMarkers = hashMapOf<String, Int>()
 
@@ -48,35 +65,41 @@ object TextScanner {
         fun assignClosestMatch(
             map: HashMap<String, Int>,
             target : String,
-            currentWord: String,
-            currentIndex: Int
+            currentWord: String
         )
         {
             val match = FuzzySearch.ratio(target, currentWord)
             if (match > THRESHOLD) {
                 map[target]?.let { index ->
                     if (index == -1)
-                        map[target] = currentIndex
+                        map[target] = wordIndex[currentWord]!!
                     else {
                         //Exists already.
-                        val previousWord = lines[index]
-                        val oldMatch = FuzzySearch.ratio(previousWord, target)
+                        val previousWords = lines[wordIndex[currentWord]!!].split(" ")
+                        val oldMatch = FuzzySearch.extractOne(target, previousWords).string
 
-                        if (match > oldMatch)
-                            map[target] = currentIndex
+                        if (match > FuzzySearch.ratio(oldMatch, target))
+                            map[target] = wordIndex[currentWord]!!
                     }
                 }
             }
         }
 
-        lines.mapIndexed { index, word ->
+        words.forEach { word ->
             firstMarkers.forEach { target ->
-                assignClosestMatch(mapFirstMarkers, target, word, index)
+                assignClosestMatch(mapFirstMarkers, target, word)
             }
 
             secondMarkers.forEach { target ->
-                assignClosestMatch(mapSecondMarkers, target, word, index)
+                assignClosestMatch(mapSecondMarkers, target, word)
             }
+        }
+
+        mapFirstMarkers.map { pair ->
+            logDebug("FirstMarkers", "${pair.key} has ${lines[pair.value]}")
+        }
+        mapSecondMarkers.map { pair ->
+            logDebug("Second Markers","${pair.key} has ${lines[pair.value]}")
         }
 
         return Pair(mapFirstMarkers, mapSecondMarkers)
