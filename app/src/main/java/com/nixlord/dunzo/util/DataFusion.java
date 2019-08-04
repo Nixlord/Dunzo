@@ -74,12 +74,12 @@ public class DataFusion {
         ArrayList<String> extractedElements = extract(lowestIndex, highestIndex, elements);
         ArrayList<String> nameElementList = new ArrayList<>();
         ArrayList<String> numberElementList = new ArrayList<>();
-        cleanStringElementList(firstMarkers, extractedElements);
-        cleanStringElementList(secondMarkers, extractedElements);
+//        cleanStringElementList(firstMarkers, extractedElements);
+//        cleanStringElementList(secondMarkers, extractedElements);
         separateElementList(extractedElements, nameElementList, numberElementList);
 
         print("Before Outliers: "+nameElementList);
-        removeOutliers(nameElementList);
+//        removeOutliers(nameElementList);
 
 
         print("Total Element List: ");
