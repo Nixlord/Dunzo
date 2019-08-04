@@ -17,6 +17,7 @@ import com.nixlord.dunzo.azure.ComputerVision
 import com.nixlord.dunzo.azure.SpellCheck
 import com.nixlord.dunzo.ml.TextScanner
 import com.nixlord.dunzo.util.DataCreator
+import com.nixlord.dunzo.util.DataFusion
 import com.phoenixoverlord.pravega.base.BaseActivity
 import com.phoenixoverlord.pravega.extensions.logDebug
 import com.phoenixoverlord.pravega.extensions.logError
@@ -44,12 +45,15 @@ class AddItemFragment : Fragment() {
                                 imageFile = image
                                 ComputerVision.recognize(image, {
 
-                                    DataCreator.deserializeText(it)
-                                        .forEach {
-                                            logDebug(it)
-                                        }
+                                    val lines = DataCreator.deserializeText(it)
+//                                        .forEach {
+//                                            logDebug(it)
+//                                        }
 
-
+                                    DataFusion.createProduct(
+                                        lines,
+                                        TextScanner.parts(lines)
+                                    )
 
                                 }, {
                                     logError(it)
@@ -68,7 +72,7 @@ class AddItemFragment : Fragment() {
         setupSpinner(productType, R.array.types) { selected -> logDebug(selected) }
 
         uploadButton.setOnClickListener {
-            TextScanner.scan(this.activity as BaseActivity, imageFile)
+            logDebug("")
             /*TODO
                 Use the type parameter which has been selected using spinner
              */

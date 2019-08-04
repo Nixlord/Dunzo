@@ -22,23 +22,22 @@ object TextScanner {
     val firstMarkers = arrayListOf<String>("item", "name", "particulars", "price", "qty", "total", "amount")
     val secondMarkers = arrayListOf<String>("grand", "total", "subtotal", "vat")
 
-    fun getElements(
-        firebaseText: FirebaseVisionText
-    ) : ArrayList<String> {
+//    fun getElements(
+//        firebaseText: FirebaseVisionText
+//    ) : ArrayList<String> {
+//
+//        val elements = arrayListOf<String>()
+//        firebaseText.textBlocks.forEach {
+//            it.lines.forEach {
+//                it.elements.forEach {
+//                    elements.add(it.text.toLowerCase())
+//                }
+//            }
+//        }
+//        return elements
+//    }
 
-        val elements = arrayListOf<String>()
-        firebaseText.textBlocks.forEach {
-            it.lines.forEach {
-                it.elements.forEach {
-                    elements.add(it.text.toLowerCase())
-                }
-            }
-        }
-        return elements
-    }
-
-    fun parts(firebaseText : FirebaseVisionText)  : Pair<HashMap<String, Int>, HashMap<String, Int>> {
-        val elements = getElements(firebaseText)
+    fun parts(lines: ArrayList<String>)  : Pair<HashMap<String, Int>, HashMap<String, Int>> {
 
         val mapFirstMarkers = hashMapOf<String, Int>()
         val mapSecondMarkers = hashMapOf<String, Int>()
@@ -60,7 +59,7 @@ object TextScanner {
                         map[target] = currentIndex
                     else {
                         //Exists already.
-                        val previousWord = elements[index]
+                        val previousWord = lines[index]
                         val oldMatch = FuzzySearch.ratio(previousWord, target)
 
                         if (match > oldMatch)
@@ -70,7 +69,7 @@ object TextScanner {
             }
         }
 
-        elements.mapIndexed { index, word ->
+        lines.mapIndexed { index, word ->
             firstMarkers.forEach { target ->
                 assignClosestMatch(mapFirstMarkers, target, word, index)
             }
@@ -79,28 +78,20 @@ object TextScanner {
                 assignClosestMatch(mapSecondMarkers, target, word, index)
             }
         }
-//
-//        fun closest() = elements.reduce { largest, current ->
-//            if ( FuzzySearch.ratio(current, "item") > FuzzySearch.ratio(largest, "item"))
-//                current
-//            else
-//                largest
-//        }
-//
-//        logDebug("Logging from", "Closest word to item is ${closest()}")
+
         return Pair(mapFirstMarkers, mapSecondMarkers)
     }
-
-
-
-    fun scan(activity: BaseActivity, image : File) {
-        val bitmap = BitmapFactory.decodeFile(image.path)
-        val firebaseImage = FirebaseVisionImage.fromBitmap(bitmap)
-        detector.processImage(firebaseImage)
-            .addOnSuccessListener {
-                //logDebug(it.text)
-                DataFusion.createProduct(it)
-                parts(it)
-            }
-    }
+//
+//
+//
+//    fun scan(activity: BaseActivity, image : File) {
+//        val bitmap = BitmapFactory.decodeFile(image.path)
+//        val firebaseImage = FirebaseVisionImage.fromBitmap(bitmap)
+//        detector.processImage(firebaseImage)
+//            .addOnSuccessListener {
+//                //logDebug(it.text)
+//                DataFusion.createProduct(it)
+//                parts(it)
+//            }
+//    }
 }

@@ -14,7 +14,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class DataFusion {
-    public static void createProduct(FirebaseVisionText visionText) {
+    public static void createProduct(ArrayList<String> elements, Pair<HashMap<String, Integer>, HashMap<String, Integer>> parts) {
 //        food/bill10
         /*
 
@@ -31,41 +31,43 @@ public class DataFusion {
         Replace print calls with Object creation and return the object.
 
          */
+//
+//        int headerCount = 1;
+//        String name = "";
+//        String address = "";
+//        String phoneNo = "";
+//        String resultText = visionText.getText();
+//        //print(resultText);
+//
+//
+//
+//        for(FirebaseVisionText.TextBlock block: visionText.getTextBlocks()){
+//            String blockText = block.getText();
+//            //print(blockText);
+//            if(headerCount-->0) {
+//
+//                List<FirebaseVisionText.Line> lineList = block.getLines();
+//                name = lineList.get(0).getText();
+//                address = lineList.get(1).getText() + " " + lineList.get(2).getText() + " " + lineList.get(3).getText();
+//                phoneNo = lineList.get(4).getText().replaceAll("Ph No. ", "");
+//            }
+//            for(FirebaseVisionText.Line line:block.getLines()){
+//                String lineText = line.getText();
+//                print("Line: "+lineText);
+//            }
+//        }
+//        print("Name: "+name+"\n Address: "+address+"\nPhone No.: "+phoneNo);
+//        //LoggerKt.logDebug("DataFusion", "");
+//
+//
 
-        int headerCount = 1;
-        String name = "";
-        String address = "";
-        String phoneNo = "";
-        String resultText = visionText.getText();
-        //print(resultText);
-
-
-
-        for(FirebaseVisionText.TextBlock block: visionText.getTextBlocks()){
-            String blockText = block.getText();
-            //print(blockText);
-            if(headerCount-->0) {
-
-                List<FirebaseVisionText.Line> lineList = block.getLines();
-                name = lineList.get(0).getText();
-                address = lineList.get(1).getText() + " " + lineList.get(2).getText() + " " + lineList.get(3).getText();
-                phoneNo = lineList.get(4).getText().replaceAll("Ph No. ", "");
-            }
-            for(FirebaseVisionText.Line line:block.getLines()){
-                String lineText = line.getText();
-                print("Line: "+lineText);
-            }
-        }
-        print("Name: "+name+"\n Address: "+address+"\nPhone No.: "+phoneNo);
-        //LoggerKt.logDebug("DataFusion", "");
-
+//        Pair<HashMap<String, Integer>, HashMap<String, Integer>> parts = TextScanner.INSTANCE.parts(visionText);
 
         ArrayList<String> firstMarkers = TextScanner.INSTANCE.getFirstMarkers();
         ArrayList<String> secondMarkers = TextScanner.INSTANCE.getSecondMarkers();
-        Pair<HashMap<String, Integer>, HashMap<String, Integer>> parts = TextScanner.INSTANCE.parts(visionText);
+
         HashMap<String, Integer> firstMap = parts.getFirst();
         HashMap<String, Integer> secondMap = parts.getSecond();
-        ArrayList<String> elements = TextScanner.INSTANCE.getElements(visionText);
 
         int lowestIndex = getLowestIndex(firstMap);
         int highestIndex = getHighestIndex(secondMap);
