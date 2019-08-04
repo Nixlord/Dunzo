@@ -43,11 +43,13 @@ class AddItemFragment : Fragment() {
                             it.forEach { image ->
                                 imageFile = image
                                 ComputerVision.recognize(image, {
-                                    val recognitionResult = DataCreator.deserializeText(it)
-                                    val sentenceList = DataCreator.createObject(recognitionResult)
-                                    sentenceList.forEach {
-                                        logDebug(it)
-                                    }
+
+                                    DataCreator.deserializeText(it)
+                                        .forEach {
+                                            logDebug(it)
+                                        }
+
+
 
                                 }, {
                                     logError(it)
