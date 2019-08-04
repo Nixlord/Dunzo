@@ -26,6 +26,7 @@ import com.phoenixoverlord.pravega.base.BaseActivity
 import com.phoenixoverlord.pravega.extensions.Firebase
 import com.phoenixoverlord.pravega.extensions.logDebug
 import com.phoenixoverlord.pravega.extensions.logError
+import com.phoenixoverlord.pravega.toast
 import kotlinx.android.synthetic.main.fragment_new_product.*
 import java.io.File
 import java.util.regex.Pattern
@@ -69,6 +70,7 @@ class AddItemFragment : Fragment() {
                         .addOnSuccessListener {
                             it.forEach { image ->
                                 imageFile = image
+                                (activity as MainActivity).toast("Please Wait for 15seconds, Dialling Satya from Azure(API call)")
                                 ComputerVision.recognize(image, {
 
                                     val lines = DataCreator.deserializeText(it)
@@ -141,9 +143,11 @@ class AddItemFragment : Fragment() {
         setupSpinner(productType, R.array.types) { selected -> type = selected }
 
         uploadButton.setOnClickListener {
-
             logDebug("")
             product.type = type
+
+
+            (activity as MainActivity).toast("Uploading Products")
 
             //logDebug("UPLOAD   " + product.name)
             //"Qty Price Amount""ALU PYAZ KACHO""4.000""28.44 113.76""KHAMAN DHOKLA""3.000""23.70 71.10""JALEBI""0.300 331.75""99.53""LACCHA RABDI""2.000""37.91""75.82"
@@ -181,6 +185,7 @@ class AddItemFragment : Fragment() {
 
                             product.stores.add(sellerID)
                             productRef.set(product)
+
 
                             logDebug("pr:id", product.id)
                             logDebug("pr:name", product.name)
