@@ -1,24 +1,20 @@
 package com.nixlord.dunzo.model;
 
-import java.util.HashMap;
-
 public class Seller {
     String id;
     String name;
     String address;
     String phoneNo;
-    HashMap<String, String> productIDCountMap;
 
     public Seller() {
 
     }
 
-    public Seller(String id, String name, String address, String phoneNo, HashMap<String, String> productIDCountMap) {
+    public Seller(String id, String name, String address, String phoneNo) {
         this.id = id;
         this.name = name;
         this.address = address;
         this.phoneNo = phoneNo;
-        this.productIDCountMap = productIDCountMap;
     }
 
     public String getId() {
@@ -53,11 +49,4 @@ public class Seller {
         this.phoneNo = phoneNo;
     }
 
-    public HashMap<String, String> getProductIDCountMap() {
-        return productIDCountMap;
-    }
-
-    public void setProductIDCountMap(HashMap<String, String> productIDCountMap) {
-        this.productIDCountMap = productIDCountMap;
-    }
 }
