@@ -44,19 +44,6 @@ class AddItemFragment : Fragment() {
         val seller = Seller()
         var type = "Food"
 
-        fun phoneNoSplitter(text : String = "") : String? {
-            val p1 = "(Ph No.)"
-            val p2 = "(.*?)"
-
-            val p = Pattern.compile(p1+p2, Pattern.CASE_INSENSITIVE or Pattern.DOTALL)
-            val m = p.matcher(text)
-            if(m.find()) {
-                val phno = m.group(2)
-                return phno
-            }
-            return null
-        }
-
         cameraButton.setOnClickListener {
             activity.apply {
                 (activity as MainActivity).withPermissions(
@@ -101,15 +88,15 @@ class AddItemFragment : Fragment() {
                                             }
                                             if (index > itemIndex && line.contains("total", true)) {
                                                 if (acc != "!@#$%^&*()") {
-                                                    product.name = acc
-                                                    logDebug("name", acc)
-                                                    product.price = acc
-                                                    logDebug("price", acc)
-                                                    acc = "!@#$%^&*()"
-                                                }
+                                                product.name = acc
+                                                logDebug("name", acc)
+                                                product.price = acc
+                                                logDebug("price", acc)
+                                                acc = "!@#$%^&*()"
+                                                    }
                                             }
-
-                                            acc += line
+                                            if (acc != "!@#$%^&*()")
+                                                acc += line
                                         }
                                     }
 
@@ -140,6 +127,11 @@ class AddItemFragment : Fragment() {
         uploadButton.setOnClickListener {
             logDebug("")
             product.type = type
+
+            //logDebug("UPLOAD   " + product.name)
+            //"Qty Price Amount""ALU PYAZ KACHO""4.000""28.44 113.76""KHAMAN DHOKLA""3.000""23.70 71.10""JALEBI""0.300 331.75""99.53""LACCHA RABDI""2.000""37.91""75.82"
+
+
 
             var productRef = Firebase.firestore.collection("product").document()
             Firebase.firestore.collection("seller")
@@ -190,6 +182,14 @@ class AddItemFragment : Fragment() {
 
                 }
         }
+    }
+
+    fun splitter(text : String) {
+
+        val markerFound = arrayListOf<String>("item", "qty", "price", "amount")
+        val list = ArrayList<String>()
+        //
+
     }
 
     fun setupSpinner(spinner : Spinner, textArrayResID : Int, onItemSelected : (String) -> Unit) {
