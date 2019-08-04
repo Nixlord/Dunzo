@@ -96,9 +96,11 @@ object TextScanner {
         }
 
         mapFirstMarkers.map { pair ->
+            if (pair.value != -1)
             logDebug("FirstMarkers", "${pair.key} has ${lines[pair.value]}")
         }
         mapSecondMarkers.map { pair ->
+            if (pair.value != -1)
             logDebug("Second Markers","${pair.key} has ${lines[pair.value]}")
         }
 

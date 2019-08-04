@@ -46,14 +46,13 @@ class AddItemFragment : Fragment() {
                                 ComputerVision.recognize(image, {
 
                                     val lines = DataCreator.deserializeText(it)
-//                                        .forEach {
-//                                            logDebug(it)
-//                                        }
+                                    lines.forEach { logDebug(it) }
 
-                                    DataFusion.createProduct(
-                                        lines,
-                                        TextScanner.parts(lines)
-                                    )
+//
+//                                    DataFusion.createProduct(
+//                                        lines,
+//                                        TextScanner.parts(lines)
+//                                    )
 
                                 }, {
                                     logError(it)
